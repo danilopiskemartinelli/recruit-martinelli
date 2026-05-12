@@ -1,0 +1,47 @@
+# Web Framework
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+python-multipart==0.0.17
+
+# Database
+sqlalchemy[asyncio]==2.0.36
+alembic==1.14.0
+asyncpg==0.30.0
+psycopg2-binary==2.9.10
+
+# Auth
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.2.1
+
+# Validation / Settings
+pydantic==2.10.3
+pydantic-settings==2.6.1
+email-validator==2.2.0
+
+# HTTP Client
+httpx==0.28.1
+
+# Email
+aiosmtplib==3.0.2
+jinja2==3.1.4
+
+# PDF Generation
+reportlab==4.2.5
+
+# Crypto / Hashing
+cryptography==44.0.0
+
+# Cache
+redis==5.2.1
+
+# Task Queue
+celery[redis]==5.4.0
+
+# Logging
+structlog==24.4.0
+
+# Utilities
+python-slugify==8.0.4
+orjson==3.10.12
+python-magic-bin==0.4.14

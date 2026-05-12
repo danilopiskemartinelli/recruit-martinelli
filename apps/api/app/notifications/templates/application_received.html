@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Candidatura Recebida - {{ job_title }}{% endblock %}
+{% block header_title %}Candidatura Recebida{% endblock %}
+{% block content %}
+<h2>Olá, {{ candidate_name }}!</h2>
+<p>Recebemos sua candidatura para a vaga de <strong>{{ job_title }}</strong> na <strong>{{ company_name }}</strong>.</p>
+<p>Nossa equipe irá analisar seu perfil e entrará em contato em breve.</p>
+<hr class="divider">
+<p>Você pode acompanhar o status da sua candidatura pelo portal:</p>
+<a href="{{ portal_url }}" class="button">Acompanhar Candidatura</a>
+{% endblock %}

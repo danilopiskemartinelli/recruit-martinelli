@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Documento para Assinatura - {{ document_type_label }}{% endblock %}
+{% block header_title %}Documento para Assinatura Digital{% endblock %}
+{% block content %}
+<h2>Olá, {{ candidate_name }}!</h2>
+<p>Um documento está disponível para sua assinatura digital:</p>
+<p><strong>Documento:</strong> {{ document_type_label }}<br>
+<strong>Empresa:</strong> {{ company_name }}<br>
+<strong>Vaga:</strong> {{ job_title }}</p>
+<hr class="divider">
+<p>O link de assinatura expira em <strong>7 dias</strong>.</p>
+<a href="{{ signature_url }}" class="button">Assinar Documento</a>
+<p style="font-size:12px;color:#9ca3af;">
+  Link: <a href="{{ signature_url }}">{{ signature_url }}</a>
+</p>
+{% endblock %}

@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# Build outputs
+.next/
+dist/
+build/
+*.egg-info/
+
+# Environment
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Turbo
+.turbo/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Test coverage
+coverage/
+.coverage
+htmlcov/
+
+# Uploads & generated files
+uploads/
+certs/
+
+# SQLite dev database
+*.db
+*.db-shm
+*.db-wal
+
+# Alembic
+alembic/versions/*.py
+!alembic/versions/.gitkeep
