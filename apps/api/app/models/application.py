@@ -40,6 +40,7 @@ class Application(Base, UUIDMixin, TimestampMixin):
     job = relationship("Job", back_populates="applications")
     candidate = relationship("Candidate", back_populates="applications")
     application_assessments = relationship("ApplicationAssessment", back_populates="application")
+    psych_invite = relationship("PsychInvite", back_populates="application", uselist=False)
 
 
 class ApplicationAssessment(Base, UUIDMixin, TimestampMixin):

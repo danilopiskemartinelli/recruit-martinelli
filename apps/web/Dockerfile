@@ -2,10 +2,18 @@ FROM node:20-alpine
 
 WORKDIR /app
 
+# Copy workspace root files
 COPY package*.json ./
-RUN npm install
+COPY packages/types ./packages/types
 
-COPY . .
+# Copy web app
+COPY apps/web/package*.json ./apps/web/
+
+RUN npm install --legacy-peer-deps
+
+COPY apps/web ./apps/web
+
+WORKDIR /app/apps/web
 
 EXPOSE 3000
 

@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 from sqlalchemy import select, func
 import uuid
 
@@ -14,15 +15,19 @@ from app.core.pagination import PaginationParams, PaginatedResponse
 router = APIRouter(prefix="/assessments", tags=["assessments"])
 
 
+def _with_questions(q):
+    return q.options(selectinload(Assessment.questions))
+
+
 @router.get("", response_model=PaginatedResponse[AssessmentOut])
 async def list_assessments(
     params: PaginationParams = Depends(),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(require_recruiter),
 ):
-    q = select(Assessment).where(Assessment.company_id == current_user.company_id)
-    total = (await db.execute(select(func.count()).select_from(q.subquery()))).scalar()
-    result = await db.execute(q.offset(params.offset).limit(params.page_size))
+    base = select(Assessment).where(Assessment.company_id == current_user.company_id)
+    total = (await db.execute(select(func.count()).select_from(base.subquery()))).scalar()
+    result = await db.execute(_with_questions(base).offset(params.offset).limit(params.page_size))
     return PaginatedResponse.build(result.scalars().all(), total, params)
 
 
@@ -35,6 +40,7 @@ async def create_assessment(
     a = Assessment(**payload.model_dump(), company_id=current_user.company_id, created_by=current_user.id)
     db.add(a)
     await db.flush()
+    await db.refresh(a, ["questions"])
     return a
 
 
@@ -45,7 +51,9 @@ async def get_assessment(
     current_user: User = Depends(require_recruiter),
 ):
     result = await db.execute(
-        select(Assessment).where(Assessment.id == assessment_id, Assessment.company_id == current_user.company_id)
+        _with_questions(
+            select(Assessment).where(Assessment.id == assessment_id, Assessment.company_id == current_user.company_id)
+        )
     )
     a = result.scalar_one_or_none()
     if not a:
@@ -61,7 +69,9 @@ async def update_assessment(
     current_user: User = Depends(require_recruiter),
 ):
     result = await db.execute(
-        select(Assessment).where(Assessment.id == assessment_id, Assessment.company_id == current_user.company_id)
+        _with_questions(
+            select(Assessment).where(Assessment.id == assessment_id, Assessment.company_id == current_user.company_id)
+        )
     )
     a = result.scalar_one_or_none()
     if not a:

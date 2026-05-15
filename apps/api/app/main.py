@@ -9,6 +9,7 @@ from app.routers import (
     assessments, questions, applications,
     ai_insights, notifications, digital_signatures, reports,
 )
+from app.routers import psych_assessments
 
 
 @asynccontextmanager
@@ -56,6 +57,7 @@ app.include_router(ai_insights.router, prefix=API_PREFIX)
 app.include_router(notifications.router, prefix=API_PREFIX)
 app.include_router(digital_signatures.router, prefix=API_PREFIX)
 app.include_router(reports.router, prefix=API_PREFIX)
+app.include_router(psych_assessments.router, prefix=API_PREFIX)
 
 
 @app.get("/health")

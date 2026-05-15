@@ -47,7 +47,7 @@ services:
       SYNC_DATABASE_URL: postgresql://${POSTGRES_USER:-hr_user}:${POSTGRES_PASSWORD:-hr_secret}@postgres:5432/${POSTGRES_DB:-hr_platform}
       REDIS_URL: redis://redis:6379/0
     ports:
-      - "8000:8000"
+      - "8313:8000"
     volumes:
       - ./apps/api:/app
       - api_uploads:/app/uploads
@@ -79,18 +79,19 @@ services:
 
   web:
     build:
-      context: ./apps/web
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: apps/web/Dockerfile
     container_name: hr_web
     restart: unless-stopped
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8000
+      NEXT_PUBLIC_API_URL: http://192.168.0.148:8313
     ports:
-      - "3000:3000"
+      - "3322:3000"
     volumes:
-      - ./apps/web:/app
+      - ./apps/web:/app/apps/web
+      - ./packages:/app/packages
       - /app/node_modules
-      - /app/.next
+      - /app/apps/web/.next
     command: npm run dev
 
   mailhog:

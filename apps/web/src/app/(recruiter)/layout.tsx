@@ -20,10 +20,16 @@ export default function RecruiterLayout({ children }: { children: React.ReactNod
   if (!user) return null;
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div style={{ display: "flex", minHeight: "100vh" }}>
       <Sidebar />
-      <main className="flex-1 overflow-auto">
-        <div className="p-6">{children}</div>
+      <main style={{
+        flex: 1,
+        padding: "32px 36px",
+        overflow: "auto",
+        background: "var(--color-background)",
+        minWidth: 0,
+      }}>
+        {children}
       </main>
     </div>
   );

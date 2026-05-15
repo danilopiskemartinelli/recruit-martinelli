@@ -6,8 +6,12 @@ import uuid
 
 class ApplicationCreate(BaseModel):
     job_id: uuid.UUID
+    candidate_email: str
+    candidate_name: str
+    candidate_phone: str | None = None
     cover_letter: str | None = None
     source: str | None = None
+    gdpr_consent: bool = False
 
 
 class ApplicationUpdate(BaseModel):

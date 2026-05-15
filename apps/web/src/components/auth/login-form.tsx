@@ -10,11 +10,31 @@ import { api } from "@/lib/api-client";
 import { useAuthStore } from "@/store/auth-store";
 
 const schema = z.object({
-  email: z.string().email("E-mail inválido"),
+  email:    z.string().email("E-mail inválido"),
   password: z.string().min(6, "Mínimo 6 caracteres"),
 });
 
 type FormData = z.infer<typeof schema>;
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  padding: "9px 12px",
+  borderRadius: 8,
+  border: "1px solid var(--color-border)",
+  fontSize: 13,
+  color: "var(--color-text-primary)",
+  outline: "none",
+  boxSizing: "border-box",
+  background: "#fff",
+};
+
+const labelStyle: React.CSSProperties = {
+  display: "block",
+  fontSize: 12,
+  fontWeight: 600,
+  color: "var(--color-text-secondary)",
+  marginBottom: 6,
+};
 
 export function LoginForm() {
   const router = useRouter();
@@ -32,12 +52,7 @@ export function LoginForm() {
       setTokens(tokens.access_token, tokens.refresh_token);
       const { data: me } = await api.get("/auth/me");
       setUser(me);
-
-      if (me.role === "admin" || me.role === "recruiter") {
-        router.push("/dashboard");
-      } else {
-        router.push("/portal");
-      }
+      router.push(me.role === "candidate" ? "/portal" : "/dashboard");
     } catch (err: any) {
       toast.error(err.response?.data?.detail ?? "Credenciais inválidas");
     } finally {
@@ -46,33 +61,52 @@ export function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
+        <label style={labelStyle}>E-mail</label>
         <input
           type="email"
           {...register("email")}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="seu@email.com"
+          style={inputStyle}
+          placeholder="seu@empresa.com"
+          onFocus={(e) => (e.currentTarget.style.borderColor = "var(--color-primary)")}
+          onBlur={(e) => (e.currentTarget.style.borderColor = "var(--color-border)")}
         />
-        {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>}
+        {errors.email && <p style={{ marginTop: 4, fontSize: 11, color: "var(--color-error)" }}>{errors.email.message}</p>}
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Senha</label>
+        <label style={labelStyle}>Senha</label>
         <input
           type="password"
           {...register("password")}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          style={inputStyle}
           placeholder="••••••••"
+          onFocus={(e) => (e.currentTarget.style.borderColor = "var(--color-primary)")}
+          onBlur={(e) => (e.currentTarget.style.borderColor = "var(--color-border)")}
         />
-        {errors.password && <p className="mt-1 text-xs text-red-600">{errors.password.message}</p>}
+        {errors.password && <p style={{ marginTop: 4, fontSize: 11, color: "var(--color-error)" }}>{errors.password.message}</p>}
       </div>
 
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold rounded-lg transition-colors"
+        style={{
+          width: "100%",
+          padding: "10px 0",
+          borderRadius: 8,
+          border: "none",
+          background: "var(--color-primary)",
+          color: "#fff",
+          fontSize: 13,
+          fontWeight: 600,
+          cursor: loading ? "not-allowed" : "pointer",
+          opacity: loading ? 0.7 : 1,
+          transition: "background 0.15s",
+          marginTop: 4,
+        }}
+        onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = "var(--color-primary-hover)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = "var(--color-primary)"; }}
       >
         {loading ? "Entrando..." : "Entrar"}
       </button>

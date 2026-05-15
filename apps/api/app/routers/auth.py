@@ -2,14 +2,72 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from datetime import datetime, timezone
+from pydantic import BaseModel
 
 from app.database import get_db
 from app.models.user import User
+from app.models.company import Company
 from app.schemas.auth import LoginRequest, RegisterRequest, TokenResponse, RefreshRequest, UserOut
+from app.schemas.company import CompanyOut
 from app.core.security import hash_password, verify_password, create_access_token, create_refresh_token, decode_token
+from app.core.exceptions import ConflictError
 from app.dependencies import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+
+
+class RegisterCompanyRequest(BaseModel):
+    company_name: str
+    company_slug: str
+    admin_email: str
+    admin_password: str
+    admin_full_name: str
+
+
+class RegisterCompanyResponse(BaseModel):
+    user: UserOut
+    company: CompanyOut
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
+
+
+@router.post("/register-company", response_model=RegisterCompanyResponse, status_code=status.HTTP_201_CREATED)
+async def register_company(payload: RegisterCompanyRequest, db: AsyncSession = Depends(get_db)):
+    """Create a company and its first admin user in a single atomic operation."""
+    slug_check = await db.execute(select(Company).where(Company.slug == payload.company_slug))
+    if slug_check.scalar_one_or_none():
+        raise ConflictError("Company slug already taken")
+
+    email_check = await db.execute(select(User).where(User.email == payload.admin_email))
+    if email_check.scalar_one_or_none():
+        raise ConflictError("Email already registered")
+
+    company = Company(
+        name=payload.company_name,
+        slug=payload.company_slug,
+    )
+    db.add(company)
+    await db.flush()
+
+    user = User(
+        email=payload.admin_email,
+        hashed_password=hash_password(payload.admin_password),
+        full_name=payload.admin_full_name,
+        role="admin",
+        company_id=company.id,
+        is_verified=True,
+    )
+    db.add(user)
+    await db.flush()
+
+    token_extra = {"role": user.role, "company_id": str(company.id)}
+    return RegisterCompanyResponse(
+        user=UserOut.model_validate(user),
+        company=CompanyOut.model_validate(company),
+        access_token=create_access_token(user.id, extra=token_extra),
+        refresh_token=create_refresh_token(user.id),
+    )
 
 
 @router.post("/register", response_model=UserOut, status_code=status.HTTP_201_CREATED)
