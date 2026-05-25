@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hr_secret}
       POSTGRES_DB: ${POSTGRES_DB:-hr_platform}
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -25,7 +25,7 @@ services:
     container_name: hr_redis
     restart: unless-stopped
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -84,9 +84,9 @@ services:
     container_name: hr_web
     restart: unless-stopped
     environment:
-      NEXT_PUBLIC_API_URL: http://192.168.0.148:8313
+      NEXT_PUBLIC_API_URL: http://localhost:8313
     ports:
-      - "3322:3000"
+      - "3313:3000"
     volumes:
       - ./apps/web:/app/apps/web
       - ./packages:/app/packages
