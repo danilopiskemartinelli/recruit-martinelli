@@ -52,3 +52,7 @@ certs/
 # Alembic
 alembic/versions/*.py
 !alembic/versions/.gitkeep
+
+# data files
+*.xlsx
+*.xlsm
