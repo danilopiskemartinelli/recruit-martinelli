@@ -56,3 +56,8 @@ alembic/versions/*.py
 # data files
 *.xlsx
 *.xlsm
+
+# core dumps (e.g. crash do next-server)
+core
+**/core
+core.*
