@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   postgres:
     image: postgres:16-alpine
@@ -105,5 +103,11 @@ services:
 
 volumes:
   postgres_data:
+    external: true
+    name: hr-platform_postgres_data
   redis_data:
+    external: true
+    name: hr-platform_redis_data
   api_uploads:
+    external: true
+    name: hr-platform_api_uploads
