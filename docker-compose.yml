@@ -82,7 +82,7 @@ services:
     container_name: hr_web
     restart: unless-stopped
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8313
+      NEXT_PUBLIC_API_URL: http://192.168.0.170:8313
     ports:
       - "3313:3000"
     volumes:

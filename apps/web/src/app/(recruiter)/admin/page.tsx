@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useAuthStore } from "@/store/auth-store";
 import { Building2, Users, Shield, Plus } from "lucide-react";
 import { toast } from "sonner";
+import { api } from "@/lib/api-client";
 
 const card: React.CSSProperties = {
   background: "#fff",
@@ -46,17 +47,34 @@ export default function AdminPage() {
   const { user } = useAuthStore();
   const [showInvite, setShowInvite] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteName, setInviteName] = useState("");
+  const [invitePassword, setInvitePassword] = useState("");
   const [inviteRole, setInviteRole] = useState("recruiter");
   const [sending, setSending] = useState(false);
 
   async function handleInvite() {
-    if (!inviteEmail.trim()) { toast.error("Informe o e-mail"); return; }
+    if (!inviteEmail.trim() || !inviteName.trim() || !invitePassword.trim()) {
+      toast.error("Preencha nome, e-mail e senha");
+      return;
+    }
     setSending(true);
-    await new Promise((r) => setTimeout(r, 900));
-    setSending(false);
-    toast.success(`Convite enviado para ${inviteEmail}`);
-    setInviteEmail("");
-    setShowInvite(false);
+    try {
+      await api.post("/auth/invite-user", {
+        email: inviteEmail.trim(),
+        full_name: inviteName.trim(),
+        password: invitePassword,
+        role: inviteRole,
+      });
+      toast.success(`Usuário ${inviteEmail} criado`);
+      setInviteEmail("");
+      setInviteName("");
+      setInvitePassword("");
+      setShowInvite(false);
+    } catch (e: any) {
+      toast.error(e?.response?.data?.detail ?? "Erro ao criar usuário");
+    } finally {
+      setSending(false);
+    }
   }
 
   if (user?.role !== "admin") {
@@ -143,11 +161,27 @@ export default function AdminPage() {
             display: "flex", gap: 10, alignItems: "flex-end",
           }}>
             <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 11, fontWeight: 600, color: "var(--color-text-secondary)", marginBottom: 5 }}>Nome</div>
+              <input
+                style={{ width: "100%", padding: "8px 12px", borderRadius: 7, border: "1px solid var(--color-border)", fontSize: 13, boxSizing: "border-box" }}
+                value={inviteName} onChange={(e) => setInviteName(e.target.value)}
+                placeholder="Nome completo"
+              />
+            </div>
+            <div style={{ flex: 1 }}>
               <div style={{ fontSize: 11, fontWeight: 600, color: "var(--color-text-secondary)", marginBottom: 5 }}>E-mail</div>
               <input
                 style={{ width: "100%", padding: "8px 12px", borderRadius: 7, border: "1px solid var(--color-border)", fontSize: 13, boxSizing: "border-box" }}
                 type="email" value={inviteEmail} onChange={(e) => setInviteEmail(e.target.value)}
                 placeholder="nome@empresa.com"
+              />
+            </div>
+            <div style={{ width: 140 }}>
+              <div style={{ fontSize: 11, fontWeight: 600, color: "var(--color-text-secondary)", marginBottom: 5 }}>Senha</div>
+              <input
+                style={{ width: "100%", padding: "8px 12px", borderRadius: 7, border: "1px solid var(--color-border)", fontSize: 13, boxSizing: "border-box" }}
+                type="text" value={invitePassword} onChange={(e) => setInvitePassword(e.target.value)}
+                placeholder="senha inicial"
               />
             </div>
             <div style={{ width: 160 }}>

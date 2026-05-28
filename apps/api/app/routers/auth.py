@@ -11,6 +11,7 @@ from app.schemas.auth import LoginRequest, RegisterRequest, TokenResponse, Refre
 from app.schemas.company import CompanyOut
 from app.core.security import hash_password, verify_password, create_access_token, create_refresh_token, decode_token
 from app.core.exceptions import ConflictError
+from app.core.rbac import require_admin
 from app.dependencies import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -68,6 +69,39 @@ async def register_company(payload: RegisterCompanyRequest, db: AsyncSession = D
         access_token=create_access_token(user.id, extra=token_extra),
         refresh_token=create_refresh_token(user.id),
     )
+
+
+class InviteUserRequest(BaseModel):
+    email: str
+    password: str
+    full_name: str
+    role: str = "recruiter"
+
+
+@router.post("/invite-user", response_model=UserOut, status_code=status.HTTP_201_CREATED)
+async def invite_user(
+    payload: InviteUserRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_admin),
+):
+    """Admin creates a new user (recruiter/admin) bound to their company."""
+    if payload.role not in ("recruiter", "admin"):
+        raise HTTPException(status_code=400, detail="Role must be 'recruiter' or 'admin'")
+    existing = await db.execute(select(User).where(User.email == payload.email))
+    if existing.scalar_one_or_none():
+        raise ConflictError("Email already registered")
+    user = User(
+        email=payload.email,
+        hashed_password=hash_password(payload.password),
+        full_name=payload.full_name,
+        role=payload.role,
+        company_id=current_user.company_id,
+        is_active=True,
+        is_verified=True,
+    )
+    db.add(user)
+    await db.flush()
+    return user
 
 
 @router.post("/register", response_model=UserOut, status_code=status.HTTP_201_CREATED)

@@ -45,3 +45,4 @@ structlog==24.4.0
 python-slugify==8.0.4
 orjson==3.10.12
 python-magic==0.4.27
+openpyxl==3.1.5
