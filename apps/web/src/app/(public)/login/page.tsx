@@ -12,7 +12,7 @@ export default function LoginPage() {
       <div style={{ width: "100%", maxWidth: 380 }}>
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <div style={{ fontSize: 18, fontWeight: 700, color: "var(--color-primary)", letterSpacing: "-0.3px", marginBottom: 4 }}>
-            HR Platform
+            Recrutamento Martinelli
           </div>
           <div style={{ fontSize: 13, color: "var(--color-text-tertiary)" }}>
             Recrutamento & Seleção

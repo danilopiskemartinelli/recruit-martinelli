@@ -36,6 +36,9 @@ class Application(Base, UUIDMixin, TimestampMixin):
     source: Mapped[str | None] = mapped_column(String(100), nullable=True)
     referred_by: Mapped[str | None] = mapped_column(String(255), nullable=True)
     applied_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    offer_sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    offer_accepted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    hired_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     job = relationship("Job", back_populates="applications")
     candidate = relationship("Candidate", back_populates="applications")

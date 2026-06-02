@@ -37,7 +37,16 @@ class Job(Base, UUIDMixin, TimestampMixin):
     )
     published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     closes_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    closed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     tags: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
+    seniority_level: Mapped[str | None] = mapped_column(
+        SAEnum(
+            "estagio", "assistente", "junior", "pleno", "senior",
+            "coordenador", "consultor", "executivo", "socio", "diretoria",
+            name="seniority_level",
+        ),
+        nullable=True,
+    )
 
     company = relationship("Company", back_populates="jobs")
     creator = relationship("User", foreign_keys=[created_by])

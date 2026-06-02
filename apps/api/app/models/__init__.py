@@ -7,6 +7,7 @@ from app.models.application import Application, ApplicationAssessment, Assessmen
 from app.models.digital_signature import DigitalSignature, AuditLog
 from app.models.notification import Notification, NotificationTemplate
 from app.models.ai_insight import AIInsight
+from app.models.manager_nps import ManagerNPS
 
 __all__ = [
     "Company", "User", "Job", "Candidate",
@@ -15,4 +16,5 @@ __all__ = [
     "DigitalSignature", "AuditLog",
     "Notification", "NotificationTemplate",
     "AIInsight",
+    "ManagerNPS",
 ]

@@ -7,7 +7,7 @@ from app.database import engine, Base
 from app.routers import (
     auth, users, companies, jobs, candidates,
     assessments, questions, applications,
-    ai_insights, notifications, digital_signatures, reports,
+    ai_insights, notifications, digital_signatures, reports, kpi,
 )
 from app.routers import psych_assessments
 
@@ -58,6 +58,7 @@ app.include_router(notifications.router, prefix=API_PREFIX)
 app.include_router(digital_signatures.router, prefix=API_PREFIX)
 app.include_router(reports.router, prefix=API_PREFIX)
 app.include_router(psych_assessments.router, prefix=API_PREFIX)
+app.include_router(kpi.router, prefix=API_PREFIX)
 
 
 @app.get("/health")

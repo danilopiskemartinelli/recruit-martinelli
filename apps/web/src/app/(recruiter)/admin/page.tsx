@@ -36,11 +36,12 @@ const ROLE_CONFIG: Record<string, { label: string; bg: string; text: string }> =
 };
 
 const MOCK_USERS = [
-  { id: "1", full_name: "Admin TechCorp",  email: "admin@techcorp.com",     role: "admin",     is_active: true,  last_login: "2026-05-12" },
-  { id: "2", full_name: "Ana Recruiter",   email: "recruiter@techcorp.com", role: "recruiter", is_active: true,  last_login: "2026-05-11" },
-  { id: "3", full_name: "Carlos Mendes",   email: "carlos@techcorp.com",    role: "recruiter", is_active: true,  last_login: "2026-05-10" },
-  { id: "4", full_name: "Beatriz Souza",   email: "beatriz@techcorp.com",   role: "recruiter", is_active: false, last_login: "2026-04-20" },
-  { id: "5", full_name: "João Candidato",  email: "candidate@example.com",  role: "candidate", is_active: true,  last_login: "2026-05-09" },
+  { id: "1", full_name: "Admin Martinelli", email: "admin@exemplo.com",       role: "admin",     is_active: true, last_login: "2026-06-02" },
+  { id: "2", full_name: "Ana Recrutadora",  email: "recrutador@exemplo.com",  role: "recruiter", is_active: true, last_login: "2026-06-02" },
+  { id: "3", full_name: "Recrutadora 1",    email: "recrutador1@exemplo.com", role: "recruiter", is_active: true, last_login: "2026-06-02" },
+  { id: "4", full_name: "Candidato 1",      email: "candidato1@exemplo.com",  role: "candidate", is_active: true, last_login: "2026-06-02" },
+  { id: "5", full_name: "Candidato 2",      email: "candidato2@exemplo.com",  role: "candidate", is_active: true, last_login: "2026-06-02" },
+  { id: "6", full_name: "Candidato 3",      email: "candidato3@exemplo.com",  role: "candidate", is_active: true, last_login: "2026-06-02" },
 ];
 
 export default function AdminPage() {
@@ -109,8 +110,8 @@ export default function AdminPage() {
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }}>
           {[
-            { label: "Nome",   value: "TechCorp Demo" },
-            { label: "Slug",   value: "techcorp" },
+            { label: "Nome",   value: "Martinelli Advogados" },
+            { label: "Slug",   value: "martinelli" },
           ].map(({ label, value }) => (
             <div key={label} style={{ paddingBottom: 14, borderBottom: "1px solid var(--color-border-light)", paddingRight: 24 }}>
               <div style={{ fontSize: 11, color: "var(--color-text-tertiary)", marginBottom: 3 }}>{label}</div>

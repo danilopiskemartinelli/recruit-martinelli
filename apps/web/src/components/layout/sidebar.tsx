@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/store/auth-store";
 import {
   LayoutDashboard, Briefcase, Users, ClipboardList,
-  FileText, Brain, BarChart3, LogOut, Building2,
+  FileText, Brain, BarChart3, LogOut, Building2, TrendingUp,
 } from "lucide-react";
 
 const recruiterLinks = [
@@ -15,6 +15,7 @@ const recruiterLinks = [
   { href: "/assessments",  label: "Avaliações",   icon: ClipboardList },
   { href: "/applications", label: "Candidaturas", icon: FileText },
   { href: "/insights",     label: "Insights IA",  icon: Brain },
+  { href: "/indicators",   label: "Indicadores",  icon: TrendingUp },
   { href: "/reports",      label: "Relatórios",   icon: BarChart3 },
 ];
 
@@ -49,7 +50,7 @@ export function Sidebar() {
         borderBottom: "1px solid var(--color-border-light)",
       }}>
         <div style={{ fontSize: 15, fontWeight: 700, color: "var(--color-text-primary)", letterSpacing: "-0.3px" }}>
-          HR Platform
+          Recrutamento Martinelli
         </div>
       </div>
 

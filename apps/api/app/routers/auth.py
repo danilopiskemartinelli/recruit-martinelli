@@ -127,7 +127,7 @@ async def login(payload: LoginRequest, db: AsyncSession = Depends(get_db)):
     user = result.scalar_one_or_none()
 
     if not user or not verify_password(payload.password, user.hashed_password):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        raise HTTPException(status_code=401, detail="Credenciais inválidas")
 
     if not user.is_active:
         raise HTTPException(status_code=403, detail="Account is inactive")
@@ -147,10 +147,10 @@ async def refresh_token(payload: RefreshRequest, db: AsyncSession = Depends(get_
     try:
         data = decode_token(payload.refresh_token)
         if data.get("type") != "refresh":
-            raise HTTPException(status_code=401, detail="Invalid refresh token")
+            raise HTTPException(status_code=401, detail="Token de sessão inválido")
         user_id = data["sub"]
     except JWTError:
-        raise HTTPException(status_code=401, detail="Invalid refresh token")
+        raise HTTPException(status_code=401, detail="Token de sessão inválido")
 
     result = await db.execute(select(User).where(User.id == user_id))
     user = result.scalar_one_or_none()

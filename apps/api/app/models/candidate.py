@@ -25,6 +25,8 @@ class Candidate(Base, UUIDMixin, TimestampMixin):
     source: Mapped[str | None] = mapped_column(String(100), nullable=True)
     gdpr_consent: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     gdpr_consent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    is_pcd: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    is_young_apprentice: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     user = relationship("User", foreign_keys=[user_id])
     applications = relationship("Application", back_populates="candidate")
